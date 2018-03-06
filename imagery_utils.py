@@ -126,7 +126,7 @@ def create_training_images(chips, name):
 
     plt.close('all')
 
-def main(data_path, features_path):
+def process_all_features(features_path, data_path):
     
     features = fiona.open(features_path, 'r')
 
@@ -147,8 +147,10 @@ def main(data_path, features_path):
                     create_training_images(chips, name=name)
         pbar.update(i+1)
 
+        
 if __name__ == "__main__":
+    
     data_path = '/media/rmsare/GALLIUMOS/data/ot_data/tif/'
     faults_path = '/media/rmsare/GALLIUMOS/data/qfaults/qfaults_norcal.shp'
 
-    main(data_path, faults_path)
+    process_all_features(faults_path, data_path)
