@@ -9,6 +9,8 @@ from shapely.geometry import shape
 
 import matplotlib.pyplot as plt
 
+from copy import copy
+
 from progressbar import ETA, Bar, Percentage, ProgressBar
 
 
@@ -97,20 +99,22 @@ def divide_raster(filename, size=1024, directory='divided/'):
                 r1 = (i + 1) * size
                 c0 = j * size
                 c1 = (j + 1) * size
+
                 window = ((r0, r1), (c0, c1))
                 z = dataset.read(1, window=window)
                 z[z < 0] = np.nan # XXX: quick hack to deal with nodata mis-specification
                 fn = '{}_{}.tif'.format(r0, c0)
 
-                if np.sum(np.isnan(z)) == 0:
-                    with rasterio.open(directory + fn, 
-                            'w', 
-                            driver='GTiff',
-                            width=size,
-                            height=size,
-                            count=1,
-                            dtype=rasterio.float32) as out:
-                        out.write(z.astype(np.float32), 1)
+                with rasterio.open(directory + fn, 
+                        'w', 
+                        driver='GTiff',
+                        transform=shifted_transform,
+                        width=size,
+                        height=size,
+                        count=1,
+                        dtype=rasterio.float32) as out:
+                    out.write(z.astype(np.float32), 1)
+
 
 def create_training_images(z, name):
     """
@@ -159,19 +163,45 @@ def create_training_images(z, name):
 
     plt.close('all')
 
+def save_labelled_chips(path, out_path, label_values=None):
+    """
+    Save labelled pixels corresponding to labels of image chips
+    """
+    
+    tif_path = 'data/divided/'
+    subdirectories = os.listdir(path)
+
+    if not label_values:
+        label_values = np.arange(1, len(subdirectories) + 1)
+
+    for d, val in zip(subdirectories, label_values):
+        img_path = os.path.join(path, d)
+        files = os.listdir(img_path)
+        for f in files:
+            f = f.replace('jpg', 'tif')
+            infile = os.path.join(tif_path, f)
+            with rasterio.open(infile, 'r') as r:
+                profile = r.profile
+                profile.update(dtype=np.uint8, nodata=0)
+                arr = val * np.ones(r.shape)
+            outfile = os.path.join(out_path, f)
+            with rasterio.open(outfile, mode='w', **profile) as out:
+                out.write(arr.astype(np.uint8), 1)
+
 def main(data_file, chips_path):
 
-#    print('splitting raster...')
-#    divide_raster(data_file, size=256, directory=chips_path)
+    print('splitting raster...')
+    divide_raster(data_file, size=256, directory=chips_path)
 
-    print('saving images...')
-    files = os.listdir(chips_path)
+#    print('saving images...')
+#    files = os.listdir(chips_path)
+#
+#    for f in files:
+#        with rasterio.open(chips_path + f, 'r') as dataset:
+#            fn = f.replace('.tif', '')
+#            z = dataset.read(1)
+#            create_training_images(z, fn)
 
-    for f in files:
-        with rasterio.open(chips_path + f, 'r') as dataset:
-            fn = f.replace('.tif', '')
-            z = dataset.read(1)
-            create_training_images(z, fn)
 
 if __name__ == "__main__":
 
