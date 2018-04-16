@@ -196,17 +196,18 @@ def save_labelled_chips(path, out_path, label_values=None):
 
 def main(data_file, chips_path):
 
-    print('splitting raster...')
-    divide_raster(data_file, size=256, directory=chips_path)
+#    print('splitting raster...')
+#    divide_raster(data_file, size=256, directory=chips_path)
 
-#    print('saving images...')
-#    files = os.listdir(chips_path)
-#
-#    for f in files:
-#        with rasterio.open(chips_path + f, 'r') as dataset:
-#            fn = f.replace('.tif', '')
-#            z = dataset.read(1)
-#            create_training_images(z, fn)
+    print('saving images...')
+    files = os.listdir(chips_path)
+
+    for f in files:
+        with rasterio.open(chips_path + f, 'r') as dataset:
+            fn = f.replace('.tif', '')
+            z = dataset.read(1)
+            if np.sum(np.isnan(z)) == 0:
+                create_training_images(z, fn)
 
 
 if __name__ == "__main__":
