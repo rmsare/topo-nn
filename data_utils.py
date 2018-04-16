@@ -100,6 +100,12 @@ def divide_raster(filename, size=1024, directory='divided/'):
                 c0 = j * size
                 c1 = (j + 1) * size
 
+                # XXX: changed to affine 
+                transform = list(copy(dataset.transform))
+                shifted_transform = list(copy(dataset.transform))
+                shifted_transform[0] += c0
+                shifted_transform[3] -= r0
+
                 window = ((r0, r1), (c0, c1))
                 z = dataset.read(1, window=window)
                 z[z < 0] = np.nan # XXX: quick hack to deal with nodata mis-specification
