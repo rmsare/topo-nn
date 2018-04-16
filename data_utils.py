@@ -139,33 +139,33 @@ def create_training_images(z, name):
     plt.gca().xaxis.set_major_locator(plt.NullLocator())
     plt.gca().yaxis.set_major_locator(plt.NullLocator())
 
-    plt.savefig('data/hs/' + name + '.png', dpi=300, transparent=True, bbox_inches='tight', pad_inches=0)
+    plt.savefig('data/hs/' + name + '.jpg', dpi=300, transparent=True, bbox_inches='tight', pad_inches=0)
     
     plt.imshow(z, alpha=0.5, cmap='terrain', vmin=600, vmax=800)
-    plt.savefig('data/color/' + name + '.png', dpi=300, transparent=True, bbox_inches='tight', pad_inches=0)
+    plt.savefig('data/color/' + name + '.jpg', dpi=300, transparent=True, bbox_inches='tight', pad_inches=0)
 
     #slope_x, slope_y = calculate_slope(z)
     #plt.figure()
     #plt.imshow(slope_x, alpha=1, cmap='RdBu', origin='lower')
     #plt.axis('off')
-    #plt.savefig('data/slope/' + name + '_x.png', dpi=300, bbox_inches='tight')
+    #plt.savefig('data/slope/' + name + '_x.jpg', dpi=300, bbox_inches='tight')
 
     #plt.figure()
     #plt.imshow(slope_y, alpha=1, cmap='RdBu', origin='lower')
     #plt.axis('off')
-    #plt.savefig('data/slope/' + name + '_y.png', dpi=300, bbox_inches='tight')
+    #plt.savefig('data/slope/' + name + '_y.jpg', dpi=300, bbox_inches='tight')
 
     #curv = calculate_curvature(z)
     #plt.figure()
     #plt.imshow(curv, alpha=1, cmap='RdBu', origin='lower')
     #plt.axis('off')
-    #plt.savefig('data/curv/' + name + '.png', dpi=300, bbox_inches='tight')
+    #plt.savefig('data/curv/' + name + '.jpg', dpi=300, bbox_inches='tight')
 
     #for image in images:
         #plt.figure()
         #plt.imshow(image['data'], alpha=1, origin='lower')
         #plt.axis('off')
-        #plt.savefig('data/sat/' + name +  '_' + image['id'] + '.png', dpi=300, bbox_inches='tight')
+        #plt.savefig('data/sat/' + name +  '_' + image['id'] + '.jpg', dpi=300, bbox_inches='tight')
 
     plt.close('all')
 
